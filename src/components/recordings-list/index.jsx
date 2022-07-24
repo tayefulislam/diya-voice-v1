@@ -1,12 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrashAlt,
+  faExclamationCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import useRecordingsList from "../../hooks/use-recordings-list";
 import "./styles.css";
 
 export default function RecordingsList({ audio }) {
   const { recordings, deleteAudio } = useRecordingsList(audio);
 
-  // console.log(recordings)
+  console.log(recordings);
 
   return (
     <div className="recordings-container">
@@ -32,7 +35,11 @@ export default function RecordingsList({ audio }) {
         </>
       ) : (
         <div className="no-records">
-          <FontAwesomeIcon icon={faExclamationCircle} size="2x" color="#f2ea02" />
+          <FontAwesomeIcon
+            icon={faExclamationCircle}
+            size="2x"
+            color="#f2ea02"
+          />
           <span>You don't have records</span>
         </div>
       )}

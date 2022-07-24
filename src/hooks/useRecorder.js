@@ -13,7 +13,6 @@ const initialState = {
 export default function useRecorder() {
   const [recorderState, setRecorderState] = useState(initialState);
 
-
   useEffect(() => {
     const MAX_RECORDER_TIME = 5;
     let recordingInterval = null;
@@ -29,7 +28,10 @@ export default function useRecorder() {
             return prevState;
           }
 
-          if (prevState.recordingSeconds >= 0 && prevState.recordingSeconds < 59)
+          if (
+            prevState.recordingSeconds >= 0 &&
+            prevState.recordingSeconds < 59
+          )
             return {
               ...prevState,
               recordingSeconds: prevState.recordingSeconds + 1,
@@ -66,15 +68,15 @@ export default function useRecorder() {
       recorder.start();
 
       recorder.ondataavailable = (e) => {
-        console.log(e.data)
+        console.log(e.data);
         chunks.push(e.data);
       };
 
-      recorder.onstop = () => {
+      recorder.onstop = async () => {
         const blob = new Blob(chunks, { type: "audio/wav; codecs=opus" });
         chunks = [];
 
-        console.log(chunks)
+        console.log(chunks);
 
         // const formData = new FormData();
         // formData.append('blobFile',blob)
@@ -88,39 +90,39 @@ export default function useRecorder() {
         //   console.log(data)
         // })
 
-        const sendAudioFile = file => {
+        const sendAudioFile = (file) => {
           const formData = new FormData();
-          formData.append('audiofile', file);
-          return fetch('http://localhost:7000/uploadAudio', {
-            method: 'POST',
-            body: formData
-          });
+          formData.append("audiofile", file);
+          return fetch("https://diyavoicev1.priyopathshala.com/uploadAudio", {
+            method: "POST",
+            body: formData,
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              return data;
+            });
         };
 
-        sendAudioFile(blob)
+        const link = await sendAudioFile(blob);
 
-        console.log(blob)
+        console.log(link.link);
         // con/sole.log(formData)
 
         setRecorderState((prevState) => {
-
-          console.log(window.URL.createObjectURL(blob))
+          console.log(link);
           if (prevState.mediaRecorder)
-          
             return {
               ...initialState,
-              audio: window.URL.createObjectURL(blob),
-              
-              
+              audio: link.Location,
             };
-            
           else return initialState;
         });
       };
     }
 
     return () => {
-      if (recorder) recorder.stream.getAudioTracks().forEach((track) => track.stop());
+      if (recorder)
+        recorder.stream.getAudioTracks().forEach((track) => track.stop());
     };
   }, [recorderState.mediaRecorder]);
 

@@ -8,7 +8,7 @@ export default function useRecordingsList(audio) {
   useEffect(() => {
     if (audio)
       setRecordings((prevState) => {
-        return [...prevState, { key: generateKey(), audio }];
+        return [{ key: generateKey(), audio }];
       });
   }, [audio]);
 

@@ -72,11 +72,11 @@ export default function useRecorder() {
         chunks.push(e.data);
       };
 
-      recorder.onstop = async () => {
+      recorder.onstop = () => {
         const blob = new Blob(chunks, { type: "audio/wav; codecs=opus" });
         chunks = [];
 
-        console.log(chunks);
+        console.log(blob);
 
         // const formData = new FormData();
         // formData.append('blobFile',blob)
@@ -90,30 +90,30 @@ export default function useRecorder() {
         //   console.log(data)
         // })
 
-        const sendAudioFile = (file) => {
-          const formData = new FormData();
-          formData.append("audiofile", file);
-          return fetch("https://diyavoicev1.priyopathshala.com/uploadAudio", {
-            method: "POST",
-            body: formData,
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              return data;
-            });
-        };
+        // const sendAudioFile = (file) => {
+        //   const formData = new FormData();
+        //   formData.append("audiofile", file);
+        //   return fetch("https://diyavoicev1.priyopathshala.com/uploadAudio", {
+        //     method: "POST",
+        //     body: formData,
+        //   })
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //       return data;
+        //     });
+        // };
 
-        const link = await sendAudioFile(blob);
+        // const link = sendAudioFile(blob);
 
-        console.log(link.link);
+        // console.log(link.link);
         // con/sole.log(formData)
 
         setRecorderState((prevState) => {
-          console.log(link);
+          // console.log(link);
           if (prevState.mediaRecorder)
             return {
               ...initialState,
-              audio: link.Location,
+              audio: blob,
             };
           else return initialState;
         });
